@@ -1,0 +1,32 @@
+# Build outputs
+cmake-build-*/
+CMakeFiles/
+**/CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+install_manifest.txt
+Makefile
+build/
+out/
+
+# Compiled binaries / objects
+*.o
+*.obj
+*.exe
+*.out
+*.a
+*.lib
+*.dll
+*.so
+*.dylib
+
+# Editor / IDE
+.vscode/
+.idea/
+
+# OS junk
+Thumbs.db
+Desktop.ini
+
+# VS Code temp runner file
+tempCodeRunnerFile.cpp
