@@ -16,7 +16,34 @@ using namespace std;
 class Solution {
 public:
     vector<string> findWords(vector<vector<char>>& board, vector<string>& words) {
-        
+        TrieNode* root = new TrieNode();
+        for(const string& word : words){
+            root->insert(root, word); // 将单词插入 Trie
+        }
+    }
+private:
+
+};
+class TrieNode {
+public:
+    string word; // 存储单词
+    unordered_map<char, TrieNode*> children; // 存储子节点
+    bool isEndOfWord; // 标记是否为单词结尾
+
+    TrieNode() {
+        isEndOfWord = false;
+    }
+
+    void insert(TrieNode* root, const string& word) {
+        TrieNode* node = root; // 从根节点开始插入
+        for(char c : word){
+            if(node->children.find(c) == node->children.end()){
+                node->children[c] = new TrieNode(); // 创建新节点
+            }
+            node = node->children[c];
+        }
+        node->isEndOfWord = true; // 标记单词结尾
+        node->word = word; // 存储完整单词
     }
 };
 
