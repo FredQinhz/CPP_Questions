@@ -13,17 +13,6 @@ using namespace std;
  * 输入：board = [["o","a","a","n"],["e","t","a","e"],["i","h","k","r"],["i","f","l","v"]], words = ["oath","pea","eat","rain"]
  * 输出：["eat","oath"]
  */
-class Solution {
-public:
-    vector<string> findWords(vector<vector<char>>& board, vector<string>& words) {
-        TrieNode* root = new TrieNode();
-        for(const string& word : words){
-            root->insert(root, word); // 将单词插入 Trie
-        }
-    }
-private:
-
-};
 class TrieNode {
 public:
     string word; // 存储单词
@@ -44,6 +33,51 @@ public:
         }
         node->isEndOfWord = true; // 标记单词结尾
         node->word = word; // 存储完整单词
+    }
+};
+
+class Solution {
+public:
+    vector<string> findWords(vector<vector<char>>& board, vector<string>& words) {
+        TrieNode* root = new TrieNode();
+        for(const string& word : words){
+            root->insert(root, word); // 将单词插入 Trie
+        }
+        vector<string> result;
+        int m = board.size();
+        int n = board[0].size();
+        vector<vector<bool>> visited(m, vector<bool>(n, false)); // 记录访问状态
+        for(int i = 0; i < m; ++i){
+            for(int j = 0; j < n; ++j){
+                dfs(board, visited, i, j, root, result); // 从每个单元格开始 DFS
+            }
+        }
+        return result;
+    }
+private:
+    void dfs(vector<vector<char>>& board, vector<vector<bool>>& visited, int x, int y, TrieNode* node, vector<string>& result) {
+        if(x < 0 || x >= board.size() || y < 0 || y >= board[0].size() || visited[x][y]){
+            return; // 越界或已访问
+        }
+
+        char c = board[x][y];
+        if(node->children.find(c) == node->children.end()){
+            return; // 当前字符不在 Trie 中
+        }
+
+        visited[x][y] = true; // 标记当前单元格为已访问
+        node = node->children[c]; // 移动到 Trie 的下一个节点(对应当前字符)
+        if(node->isEndOfWord){
+            result.push_back(node->word); // 找到一个单词，加入结果
+            node->isEndOfWord = false; // 避免重复添加同一个单词
+        }
+
+        // 继续 DFS 搜索相邻的单元格
+        dfs(board, visited, x + 1, y, node, result);
+        dfs(board, visited, x - 1, y, node, result);
+        dfs(board, visited, x, y + 1, node, result);
+        dfs(board, visited, x, y - 1, node, result);
+        visited[x][y] = false; // 回溯，标记当前单元格为未访问
     }
 };
 
